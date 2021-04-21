@@ -131,9 +131,9 @@ def remove_repeated_words(words_list):
 def remove_substrings(words_list):
     aux_list = []
     remove_list = []
-    for palavra in words_list:
+    for word in words_list:
         for palavra2 in words_list:
-            if not palavra2.find(palavra):
+            if not palavra2.find(word):
                 print('Entrou', palavra2)
                 aux_list.append(palavra2)
             else:
