@@ -1,40 +1,28 @@
 def data_filtering(file_path):
     # first of all, we have a txt file with a lot of portuguese words.
     # lets read the file and then convert it to list, to be easier to manipulate
+    words_list = read_file_as_list(file_path)
 
-    with open(file_path, 'r', encoding="utf-8") as file:
-        words_list = list(file)
-        debug_print(words_list, [], 'Converting to list')
+    # We need to filter some of those words
+    words_list = remove_non_alpha(words_list)
 
-        # We need to filter some of those words
+    words_list = remove_smaller_than_3_bigger_than_8(words_list)
 
-        words_list = remove_spaces_linebreak(words_list)
+    words_list = remove_upper_only_words(words_list)
 
-        words_list = remove_non_alpha(words_list)
+    words_list = convert_to_lowercase(words_list)
 
-        words_list = remove_smaller_than_3_bigger_than_8(words_list)
+    words_list = remove_accents(words_list)
 
-        words_list = remove_upper_only_words(words_list)
+    words_list = remove_repeated_words(words_list)
 
-        words_list = convert_to_lowercase(words_list)
-
-        words_list = remove_accents(words_list)
-
-        words_list = remove_repeated_words(words_list)
-
-        # todo: remove the plural of words and substring
-        words_list = remove_substrings()
+    # todo: remove the plural of words and substring
+    # words_list = remove_substrings()
 
     # end of first filtering batch. Exporting the output to file
-    with open('PT_words_2', 'w', encoding="utf-8") as file:
-        for word in words_list:
-            # todo: adding \\n to word makes it read every word as a element, but
-            #  i must remove it afterwards
-            file.write(word + "\n")
+    file_name = write_list_as_file(words_list)
 
-    with open('PT_words_2', 'r', encoding="utf-8") as file:
-        words_list = list(file)
-        debug_print(words_list, [], 'Lendo arquivo 2')
+    read_file_as_list(file_name)
 
 
 def debug_print(output_list, removed_list, message):
@@ -49,6 +37,23 @@ def debug_print(output_list, removed_list, message):
           '{}\n'
           '---\n'
           .format(message, len(output_list), output_list[:25], removed_list[:25]))
+
+
+def read_file_as_list(file_path):
+    with open(file_path, 'r', encoding="utf-8") as file:
+        words_list = list(file)
+        debug_print(words_list, [], 'Converting '+str(file_path)+' to list')
+        words_list = remove_spaces_linebreak(words_list)
+
+    return words_list
+
+
+def write_list_as_file(words_list):
+    with open('PT_words_2', 'w', encoding="utf-8") as file:
+        for word in words_list:
+            file.write(word + "\n")
+
+    return 'PT_words_2'
 
 
 def remove_spaces_linebreak(words_list):
@@ -122,8 +127,8 @@ def remove_repeated_words(words_list):
     return lista_auxiliar
 
 
+# todo: use str.replace()
 def remove_substrings(words_list):
-    # todo: use str.replace()
     lista_auxiliar = []
     refugo = []
     for palavra in words_list:
